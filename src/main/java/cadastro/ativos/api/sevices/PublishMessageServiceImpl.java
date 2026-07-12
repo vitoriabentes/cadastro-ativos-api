@@ -24,7 +24,7 @@ public class PublishMessageServiceImpl implements PublishMessageService{
     @Override
     public void publishMessage(Ativo ativo, HttpMethod httpMethod) {
         MessageAtivoAlterado message = createMessage(ativo);
-        log.info("Enviando mensagem para fila Ativo Alterado após um {} do ativo {}", message, httpMethod);
+        log.info("Enviando mensagem para fila Ativo Alterado após um {} do ativo {}", httpMethod, ativo.getCodigo());
         sqsTemplate.send(queueUrl, message);
     }
 
