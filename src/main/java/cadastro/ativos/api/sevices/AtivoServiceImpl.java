@@ -5,10 +5,12 @@ import cadastro.ativos.api.dtos.AtivoResponse;
 import cadastro.ativos.api.exceptions.AtivoNotFoundException;
 import cadastro.ativos.api.interfaces.AtivoRepository;
 import cadastro.ativos.api.interfaces.AtivoService;
+import cadastro.ativos.api.interfaces.PublishMessageService;
 import cadastro.ativos.api.models.Ativo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +22,9 @@ public class AtivoServiceImpl implements AtivoService {
     @Autowired
     private AtivoRepository ativoRepository;
 
+    @Autowired
+    private PublishMessageService publishMessageService;
+
     @Override
     public AtivoResponse create(AtivoRequest request) {
         if(ativoRepository.findByCode(request.codigo()).isPresent()){
@@ -27,8 +32,9 @@ public class AtivoServiceImpl implements AtivoService {
             throw new RuntimeException("Ativo já cadastrado na base de dados.");
         }
 
-        Ativo ativo = mapToAtivo(request);
-        return mapToAtivoResponse(ativoRepository.save(ativo));
+        Ativo ativo = ativoRepository.save( mapToAtivo(request));
+        publishMessageService.publishMessage(ativo, HttpMethod.POST);
+        return mapToAtivoResponse(ativo);
     }
 
     @Override
@@ -51,13 +57,16 @@ public class AtivoServiceImpl implements AtivoService {
         ativo.setAptaNegociacao(request.aptaNegociacao());
         ativo.setQuantidade(request.quantidade());
 
-        return mapToAtivoResponse(ativoRepository.update(ativo));
+        Ativo updatedAtivo = ativoRepository.update(ativo);
+        publishMessageService.publishMessage(updatedAtivo, HttpMethod.PUT);
+        return mapToAtivoResponse(updatedAtivo);
     }
 
     @Override
-    public AtivoResponse delete(String codigo) {
+    public AtivoResponse deactivate(String codigo) {
         Ativo ativo = ativoRepository.findByCode(codigo).orElseThrow(() -> new AtivoNotFoundException("Ativo não encontrado."));
-        ativoRepository.delete(ativo);
+        ativoRepository.deactivate(ativo);
+        publishMessageService.publishMessage(ativo, HttpMethod.DELETE);
         return mapToAtivoResponse(ativo);
     }
 

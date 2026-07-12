@@ -40,8 +40,8 @@ public class AtivoController {
     }
 
     @DeleteMapping("/{codigo}")
-    public ResponseEntity<Void> delete(@PathVariable String codigo) {
-        ativoService.delete(codigo);
+    public ResponseEntity<Void> deactivate(@PathVariable String codigo) {
+        ativoService.deactivate(codigo);
         return ResponseEntity.noContent().build();
     }
 }

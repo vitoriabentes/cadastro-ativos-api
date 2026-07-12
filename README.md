@@ -5,6 +5,7 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue.svg)
 ![Gradle](https://img.shields.io/badge/Gradle-8.10.2-02303A.svg)
 ![Docker](https://img.shields.io/badge/Docker-20.10+-2496ED.svg)
+![AWS](https://img.shields.io/badge/AWS-SQS-orange.svg)
 
 Microsserviço para **CRUD de ativos** da plataforma de negociação. API RESTful com banco **PostgreSQL** dedicado, seguindo o padrão **Database per Service** e integrando com outros microsserviços via REST e eventos.
 

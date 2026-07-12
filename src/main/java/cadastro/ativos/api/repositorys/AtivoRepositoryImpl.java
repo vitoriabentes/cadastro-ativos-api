@@ -74,12 +74,14 @@ public class AtivoRepositoryImpl implements AtivoRepository {
     }
 
     @Override
-    public void delete(Ativo ativo) {
+    public void deactivate(Ativo ativo) {
         String query = """
-            DELETE FROM CADASTROS.ATIVO WHERE CODIGO = ?
+            UPDATE CADASTROS.ATIVO
+            SET ATIVO = FALSE
+            WHERE CODIGO = ?
             """;
         jdbcTemplate.update(query, ativo.getCodigo().toUpperCase());
-        log.info("Ativo {} deletado com sucesso.", ativo.getCodigo());
+        log.info("Ativo {} desativado com sucesso.", ativo.getCodigo());
     }
 
     @Override

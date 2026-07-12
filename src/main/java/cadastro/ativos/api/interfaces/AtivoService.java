@@ -10,7 +10,7 @@ import java.util.List;
 public interface AtivoService {
     AtivoResponse create(AtivoRequest request);
     AtivoResponse update(String codigo, AtivoRequest request);
-    AtivoResponse delete(String codigo);
+    AtivoResponse deactivate(String codigo);
     List<AtivoResponse> findAll();
     AtivoResponse findByCode(String code);
 }
