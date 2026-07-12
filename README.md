@@ -1,7 +1,7 @@
 # Cadastro de Ativos API
 
-![Java](https://img.shields.io/badge/Java-17-blue.svg)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.0-brightgreen.svg)
+![Java](https://img.shields.io/badge/Java-26-blue.svg)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1.0-brightgreen.svg)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue.svg)
 ![Gradle](https://img.shields.io/badge/Gradle-8.10.2-02303A.svg)
 ![Docker](https://img.shields.io/badge/Docker-20.10+-2496ED.svg)
