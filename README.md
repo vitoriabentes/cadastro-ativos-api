@@ -7,14 +7,25 @@
 ![Docker](https://img.shields.io/badge/Docker-20.10+-2496ED.svg)
 ![AWS](https://img.shields.io/badge/AWS-SQS-orange.svg)
 
-Microsserviço para **CRUD de ativos** da plataforma de negociação. API RESTful com banco **PostgreSQL** dedicado, seguindo o padrão **Database per Service** e integrando com outros microsserviços via REST e eventos.
+Microsserviço responsável pelo gerenciamento do ciclo de vida dos ativos financeiros na plataforma de negociação. Fornece uma API RESTful com banco de dados dedicado, seguindo o padrão *Database per Service*, e se integra a outros domínios via chamadas síncronas (REST) e assíncronas (eventos).
 
-## Contexto geral
-Este projeto foi desenvolvido como trabalho da disciplina Desenvolvimento de Sistemas de Informação Distribuídos (ACH2147) na EACH-USP. O projeto tem como objetivo simular, de forma parcial, o funcionamento de uma plataforma de negociação de ativos financeiros, reproduzindo o funcionamento do mercado de ações. 
+## Escopo e Responsabilidades
 
-Trata-se de um sistema distribuído que permite a negociação de ativos pelos investidores por meio de operações de compra e venda. As negociações somente poderão ser realizadas durante o período em que o mercado estiver aberto, refletindo o funcionamento da Bolsa de Valores do Brasil (B3) , onde a negociação acontece em uma janela pré-determinada de abertura e fechamento do mercado. Antes de ser negociado, cada ativo deverá ser previamente cadastrado na plataforma, entretanto, durante o período de negociação, o preço unitário poderá variar dinamicamente em função da oferta e da demanda, sendo atualizado em tempo real. A plataforma será responsável por monitorar continuamente as atualizações de preços dos ativos, gerenciar as negociações em tempo real e garantir a integridade e a consistência das transações realizadas. Para suprir essas funções, o sistema possui mecanismos de validação e resiliência capazes de impedir operações inválidas, como tentativas de negociação com preços desatualizados ou quantidade insuficiente de ativos disponíveis.
+Este microsserviço é o ponto central para a manutenção dos dados cadastrais dos ativos. Suas principais funções são:
 
-## Sobre o Microsserviço
-O *cadastro-ativos-api* é o microsserviço responsável pelo CRUD de ativos da plataforma. Ele fornece uma API RESTful para gerenciar o ciclo de vida completo dos ativos financeiros que serão negociados, permitindo cadastrar novos ativos, consultar ativos existentes por código, nome ou indexador, atualizar informações e remover ativos da plataforma. O microsserviço também valida regras básicas de negócio, como código no padrão B3, valores positivos e campos obrigatórios não nulos.
+- **CRUD Completo**: Oferece operações para criar, consultar, atualizar e remover ativos.
+- **Sincronização por Eventos**: Publica mensagens na fila `Ativo Alterado` sempre que um ativo é criado ou atualizado. Isso notifica o domínio de precificação para iniciar ou encerrar o histórico de preços, mantendo a consistência entre os serviços.
 
-Sempre que um novo ativo é cadastrado ou um ativo existente é atualizado, o microsserviço publica uma mensagem na fila Ativo Alterado para que o domínio de precificação possa iniciar o primeiro registro de precificação para ativos recém-cadastrados ou encerrar a vigência da precificação atual quando o ativo deixa de estar apto para negociação. Dessa forma, um registro é inserido no banco do domínio de precificação para cada atualização ou novo cadastro de ativo, garantindo que o histórico de precificação esteja sempre sincronizado com as alterações cadastrais.
+## Arquitetura e Tecnologias
+
+O projeto foi desenvolvido em **Java** com **Spring Boot** e segue os princípios de uma arquitetura de microsserviços.
+
+- **Banco de Dados**: PostgreSQL, com um esquema dedicado e exclusivo para este serviço.
+- **Comunicação**:
+    - **Síncrona**: API RESTful para operações de cadastro.
+    - **Assíncrona**: Publicação de eventos em fila SQS para desacoplamento e resiliência.
+- **Infraestrutura**: Containerizado com **Docker**, inclui pipeline de integração contínua (GitHub Actions) para build e deploy.
+
+## Contexto do Sistema
+
+Este serviço faz parte de um sistema distribuído que simula uma plataforma de negociação de ativos, desenvolvido no contexto da disciplina **ACH2147 - Desenvolvimento de Sistemas de Informação Distribuídos** (EACH-USP). A plataforma completa gerencia a abertura e fechamento do mercado, a variação de preços em tempo real e a execução de ordens de compra e venda, garantindo a integridade das transações.
