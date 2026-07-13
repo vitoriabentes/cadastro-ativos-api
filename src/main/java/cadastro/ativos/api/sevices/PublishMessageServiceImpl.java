@@ -11,11 +11,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class PublishMessageServiceImpl implements PublishMessageService{
     private Logger log = LoggerFactory.getLogger(PublishMessageServiceImpl.class);
 
-    @Value("${aws.sqs.queue.url}")
+    @Value("${spring.cloud.aws.sqs.queue.url}")
     private String queueUrl;
 
     @Autowired
@@ -25,7 +27,19 @@ public class PublishMessageServiceImpl implements PublishMessageService{
     public void publishMessage(Ativo ativo, HttpMethod httpMethod) {
         MessageAtivoAlterado message = createMessage(ativo);
         log.info("Enviando mensagem para fila Ativo Alterado após um {} do ativo {}", httpMethod, ativo.getCodigo());
-        sqsTemplate.send(queueUrl, message);
+        try{
+            sqsTemplate.send(to -> to
+                    .queue(queueUrl)
+                    .payload(message)
+                    .header("event-type", httpMethod.name())
+                    .header("message-group-id", ativo.getCodigo())
+                    .header("message-deduplication-id", UUID.randomUUID().toString())
+            );
+        } catch (Exception e) {
+            String messageError = String.format("Erro ao enviar mensagem para fila Ativo Alterado: %s", e.getMessage());
+            log.error(messageError);
+            throw new RuntimeException(messageError);
+        }
     }
 
     private MessageAtivoAlterado createMessage(Ativo ativo) {
