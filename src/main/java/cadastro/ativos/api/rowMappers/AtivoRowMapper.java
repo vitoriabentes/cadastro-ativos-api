@@ -15,7 +15,7 @@ public class AtivoRowMapper implements RowMapper<Ativo> {
                 rs.getString("CODIGO"),
                 rs.getString("NOME"),
                 rs.getBigDecimal("VALOR_BASE"),
-                rs.getInt("INDEXADOR"),
+                rs.getBigDecimal("INDEXADOR"),
                 rs.getBoolean("APTA_NEGOCIACAO"),
                 rs.getInt("QUANTIDADE"),
                 rs.getTimestamp("DATA_CRIACAO").toLocalDateTime(),

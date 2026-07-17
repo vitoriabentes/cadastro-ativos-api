@@ -7,7 +7,7 @@ public record AtivoResponse(
         String codigo,
         String nome,
         BigDecimal valorBase,
-        int indexador,
+        BigDecimal indexador,
         Boolean aptaNegociacao,
         int quantidade,
         LocalDateTime dataCriacao,

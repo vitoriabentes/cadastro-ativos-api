@@ -21,7 +21,7 @@ public record AtivoRequest(
         BigDecimal valorBase,
 
         @NotNull(message = "Indexador é obrigatório")
-        int indexador,
+        BigDecimal indexador,
 
         @NotNull(message = "Apta à Negociação é obrigatória")
         Boolean aptaNegociacao,

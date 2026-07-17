@@ -15,13 +15,13 @@ public class Ativo {
     private String codigo;
     private String nome;
     private BigDecimal valorBase;
-    private int indexador;
+    private BigDecimal indexador;
     private Boolean aptaNegociacao;
     private int quantidade;
     private LocalDateTime dataCriacao;
     private LocalDateTime dataAtualizacao;
 
-    public Ativo(String codigo, String nome, BigDecimal valorBase, int indexador, Boolean aptaNegociacao, int quantidade) {
+    public Ativo(String codigo, String nome, BigDecimal valorBase, BigDecimal indexador, Boolean aptaNegociacao, int quantidade) {
         this.codigo = codigo;
         this.nome = nome;
         this.valorBase = valorBase;
