@@ -12,5 +12,5 @@ public interface AtivoRepository{
     List<Ativo> findAll();
     Ativo update(Ativo ativo);
     Ativo save(Ativo ativo);
-    void deactivate(Ativo ativo);
+    Ativo deactivate(Ativo ativo);
 }

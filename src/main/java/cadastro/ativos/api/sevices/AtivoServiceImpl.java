@@ -1,6 +1,7 @@
 package cadastro.ativos.api.sevices;
 
 import cadastro.ativos.api.dtos.AtivoRequest;
+import cadastro.ativos.api.dtos.AtivoRequestUpdate;
 import cadastro.ativos.api.dtos.AtivoResponse;
 import cadastro.ativos.api.exceptions.AtivoNotFoundException;
 import cadastro.ativos.api.interfaces.AtivoRepository;
@@ -49,7 +50,7 @@ public class AtivoServiceImpl implements AtivoService {
     }
 
     @Override
-    public AtivoResponse update(String codigo, AtivoRequest request) {
+    public AtivoResponse update(String codigo, AtivoRequestUpdate request) {
         Ativo ativo = ativoRepository.findByCode(codigo).orElseThrow(() -> new AtivoNotFoundException("Ativo não encontrado."));
         ativo.setNome(request.nome());
         ativo.setValorBase(request.valorBase());
@@ -63,11 +64,10 @@ public class AtivoServiceImpl implements AtivoService {
     }
 
     @Override
-    public AtivoResponse deactivate(String codigo) {
+    public void deactivate(String codigo) {
         Ativo ativo = ativoRepository.findByCode(codigo).orElseThrow(() -> new AtivoNotFoundException("Ativo não encontrado."));
-        ativoRepository.deactivate(ativo);
+        ativo = ativoRepository.deactivate(ativo);
         publishMessageService.publishMessage(ativo, HttpMethod.DELETE);
-        return mapToAtivoResponse(ativo);
     }
 
     private Ativo mapToAtivo(AtivoRequest request) {

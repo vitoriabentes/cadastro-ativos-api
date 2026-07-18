@@ -74,14 +74,22 @@ public class AtivoRepositoryImpl implements AtivoRepository {
     }
 
     @Override
-    public void deactivate(Ativo ativo) {
+    public Ativo deactivate(Ativo ativo) {
         String query = """
-            UPDATE CADASTROS.ATIVO
-            SET ATIVO = FALSE
-            WHERE CODIGO = ?
-            """;
-        jdbcTemplate.update(query, ativo.getCodigo().toUpperCase());
+        UPDATE CADASTROS.ATIVO
+        SET APTA_NEGOCIACAO = FALSE
+        WHERE CODIGO = ?
+        RETURNING APTA_NEGOCIACAO
+        """;
+        var returned = jdbcTemplate.queryForObject(query,
+                (rs, rowNum) -> rs.getBoolean("APTA_NEGOCIACAO"),
+                ativo.getCodigo().toUpperCase() // Apenas 1 parâmetro
+        );
+        if (returned != null) {
+            ativo.setAptaNegociacao(returned);
+        }
         log.info("Ativo {} desativado com sucesso.", ativo.getCodigo());
+        return ativo;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package cadastro.ativos.api.controllers;
 
 import cadastro.ativos.api.dtos.AtivoRequest;
+import cadastro.ativos.api.dtos.AtivoRequestUpdate;
 import cadastro.ativos.api.interfaces.AtivoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class AtivoController {
 
     @PutMapping("/{codigo}")
     public ResponseEntity<?> update(@PathVariable String codigo,
-                                                    @Valid @RequestBody AtivoRequest request){
+                                                    @Valid @RequestBody AtivoRequestUpdate request){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ativoService.update(codigo, request));
 
