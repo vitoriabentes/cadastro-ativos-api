@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("v1/ativos")
+@RequestMapping("v1/cadastros/ativo")
 public class AtivoController {
 
     @Autowired
